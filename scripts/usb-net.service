@@ -1,0 +1,13 @@
+[Unit]
+Description=USB Gadget Network (RNDIS) for Mi Pad 5
+After=systemd-modules-load.service sysinit.target
+Wants=systemd-modules-load.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/bin/usb-net-gadget.sh
+ExecStop=/bin/bash -c 'echo "" > /sys/kernel/config/usb_gadget/g1/UDC 2>/dev/null || true; for iface in $(ls /sys/class/net/ | grep -E "^usb[0-9]+"); do ip link set $iface down 2>/dev/null || true; done'
+
+[Install]
+WantedBy=multi-user.target
